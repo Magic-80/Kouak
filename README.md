@@ -35,7 +35,7 @@ Une application de chat en temps réel construite avec **React (Vite)** pour le 
 
 ### 1. Cloner le projet
 ```bash
-git clone https://github.com/ton-user/ton-projet.git](https://github.com/Magic-80/Kouak.git
+git clone https://github.com/Magic-80/Kouak.git
 ```
 ### Démarrer le serveur
 ```bash
