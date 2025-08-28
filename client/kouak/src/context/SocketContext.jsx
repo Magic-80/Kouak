@@ -1,14 +1,14 @@
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { io } from "socket.io-client";
-import { useAuth } from "./AuthContext";
 
 const SocketContext = createContext();
 
 export function SocketProvider({ children }) {
-  const { token } = useAuth();
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
     if (token) {
       const newSocket = io(import.meta.env.VITE_SERVER_URL, {
         auth: { token },
@@ -27,9 +27,9 @@ export function SocketProvider({ children }) {
         setSocket(null);
       }
     }
-  }, [token]);
+  }, []);
 
-  const value = useMemo(() => ({ socket, token }), [socket, token]);
+  const value = useMemo(() => ({ socket }), [socket]);
 
   return (
     <SocketContext.Provider value={value}>

@@ -1,12 +1,21 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import axios from "axios";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
+import * as Yup from "yup";
+import { register } from "../services/Api";
 
 export default function Register() {
   const navigate = useNavigate();
 
-  const initialValues = { email: "", username: "", password: "" };
+  const onSubmit = async (values, { setSubmitting, setFieldError }) => {
+    try {
+      await register(values.email , values.username , values.password);
+      navigate("/login");
+    } catch (error) {
+      setFieldError("email", error.response?.data?.error || "Erreur");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   const validationSchema = Yup.object({
     email: Yup.string().email("Email invalide").required("Requis"),
@@ -14,22 +23,10 @@ export default function Register() {
     password: Yup.string().min(6, "Au moins 6 caractères").required("Requis"),
   });
 
-  const onSubmit = async (values, { setSubmitting, setFieldError }) => {
-    try {
-      await axios.post("http://localhost:3001/api/auth/register", values);
-      navigate("/login");
-    } catch (err) {
-      const message = err.response?.data?.error || "Erreur";
-      setFieldError("email", message); // ou username selon erreur
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
     <div style={{ maxWidth: 400, margin: "50px auto" }}>
       <h2>Inscription</h2>
-      <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>
+      <Formik initialValues={{ email: "", username: "", password: "" }} validationSchema={validationSchema} onSubmit={onSubmit}>
         {({ isSubmitting }) => (
           <Form style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             <div>

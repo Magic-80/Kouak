@@ -1,9 +1,9 @@
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import * as Yup from "yup";
 import { useAuth } from "../context/AuthContext";
 import { useSocket } from "../context/SocketContext";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { getMessages, sendMessage } from "../services/Api";
 
 export default function Chat() {
   const { user, token } = useAuth();
@@ -13,12 +13,19 @@ export default function Chat() {
 
   const fetchMessages = async () => {
     try {
-      const response = await axios.get("http://localhost:3001/api/messages", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setMessages(response.data);
+      const data = await getMessages();  
+      setMessages(data);
     } catch (error) {
       console.error("Erreur fetch messages:", error);
+    }
+  };
+
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      await sendMessage(values.content);
+      resetForm();
+    } catch (err) {
+      console.error("Erreur envoi message:", err);
     }
   };
 
@@ -38,7 +45,7 @@ export default function Chat() {
     };
   }, [token, user, socket]);
 
-  
+
   const validationSchema = Yup.object({
     content: Yup.string()
       .trim()
@@ -46,19 +53,6 @@ export default function Chat() {
       .max(500, "Message trop long")
       .matches(/^[^<>]*$/, "Caractères < et > interdits"),
   });
-
-  const handleSubmit = async (values, { resetForm }) => {
-    try {
-      await axios.post(
-        "http://localhost:3001/api/messages",
-        { content: values.content },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      resetForm();
-    } catch (err) {
-      console.error("Erreur envoi message:", err);
-    }
-  };
 
   return (
     <div className="flex gap-6 max-w-5xl mx-auto mt-8">
@@ -68,9 +62,8 @@ export default function Chat() {
           {messages.map((m) => (
             <div
               key={m.id}
-              className={`mb-2 p-2 rounded ${
-                m.User?.id === user.id ? "bg-blue-100 self-end" : "bg-white"
-              }`}
+              className={`mb-2 p-2 rounded ${m.User?.id === user.id ? "bg-blue-100 self-end" : "bg-white"
+                }`}
             >
               <strong>{m.User?.username}:</strong> {m.content}
             </div>
