@@ -11,7 +11,6 @@ Une application de chat en temps réel construite avec **React (Vite)** pour le 
 - Chat en temps réel avec Socket.IO
 - Historique des messages sauvegardés en base de données
 - Affichage des utilisateurs en ligne
-- Protection contre XSS et injections (validation + nettoyage des messages)
 - Frontend avec **React + Formik + Yup**
 - Backend avec **Express + Sequelize + JWT**
 
@@ -24,7 +23,6 @@ Une application de chat en temps réel construite avec **React (Vite)** pour le 
 - React Router
 - Axios
 - Formik + Yup (validation de formulaires)
-- TailwindCSS (UI)
 
 ### Backend
 - Node.js / Express
@@ -37,7 +35,7 @@ Une application de chat en temps réel construite avec **React (Vite)** pour le 
 
 ### 1. Cloner le projet
 ```bash
-git clone https://github.com/ton-user/ton-projet.git
+git clone https://github.com/ton-user/ton-projet.git](https://github.com/Magic-80/Kouak.git
 ```
 ### Démarrer le serveur
 ```bash
