@@ -1,3 +1,7 @@
+# Fichiers à ignorer explicitement
+config/config.json
+config/db.js
+
 # Logs
 logs
 *.log
