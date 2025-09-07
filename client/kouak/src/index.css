@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+@import url('https://fonts.cdnfonts.com/css/metropolis');
+
 * {
   padding: 0;
   margin: 0;
@@ -7,57 +10,30 @@
 
 :root {
   /* Neutres */
-  --neutral-900: hsl(227, 75%, 14%);
-  --neutral-800: hsl(226, 25%, 17%);
-  --neutral-700: hsl(225, 23%, 24%);
-  --neutral-600: hsl(226, 11%, 37%);
-  --neutral-300: hsl(0, 0%, 78%);
-  --neutral-200: hsl(217, 61%, 90%);
-  --neutral-100: hsl(0, 0%, 93%);
-  --neutral-0: hsl(200, 60%, 99%);
+  --neutral-700: #303030;
+  --neutral-0: #fffef9;
 
-  /* Rouges */
-  --red-400: hsl(3, 86%, 64%);
-  --red-500: hsl(3, 71%, 56%);
-  --red-700: hsl(3, 77%, 44%);
+  /* Vert */
+  --green-100: #38a169;
+  --green-500: #c6f6d5;
 
-  /* Dégradés */
-  --gradient-light: linear-gradient(180deg, #ebf2fc 0%, #eef8f9 100%);
-  --gradient-dark: linear-gradient(180deg, #040918 0%, #091540 100%);
-
-  /* Thème clair (par défaut) */
-  --background-color: var(--neutral-0);
-  --surface-color: var(--neutral-100);
-  --text-color: var(--neutral-900);
-  --subtle-text-color: var(--neutral-600);
-  --border-color: var(--neutral-200);
-  --accent-color: var(--red-500);
-  --gradient-bg: var(--gradient-light);
-  --background-switch: var(--neutral-300);
+  /* blue */
+  --blue-100: #615ef0;
 }
 
-body.dark {
+/* body.dark {
   --background-color: var(--neutral-900);
-  --surface-color: var(--neutral-800);
-  --text-color: var(--neutral-0);
-  --subtle-text-color: var(--neutral-300);
-  --border-color: var(--neutral-700);
-  --accent-color: var(--red-400);
-  --gradient-bg: var(--gradient-dark);
-  --background-switch: var(--neutral-600);
-}
+} */
 
 body {
-  background: var(--gradient-bg);
-  color: var(--text-color);
+  background: var(--neutral-0);
+  color: var(--neutral-700);
   min-height: 100vh;
-  display: flex;
   justify-content: center;
-  font-family: 'Noto Sans', sans-serif;
+  font-family: 'Metropolis', sans-serif;
   font-size: 16px;
-  padding-bottom: 40px;
-  padding-top: 40px;
 }
+
 
 .switch {
   position: relative;

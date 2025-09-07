@@ -57,7 +57,6 @@ export default function Chat() {
   return (
     <div className="flex gap-6 max-w-5xl mx-auto mt-8">
       <div className="flex-3 flex flex-col">
-        {/* Zone messages */}
         <div className="flex-1 h-[400px] border border-gray-300 rounded-lg p-4 overflow-y-auto mb-4 bg-gray-50">
           {messages.map((m) => (
             <div
@@ -70,7 +69,6 @@ export default function Chat() {
           ))}
         </div>
 
-        {/* Formik pour envoyer un message */}
         <Formik
           initialValues={{ content: "" }}
           validationSchema={validationSchema}
