@@ -158,29 +158,3 @@ export default function Register() {
     </div>
   );
 }
-
-
-{/* <Formik initialValues={{ email: "", username: "", password: "" }} validationSchema={validationSchema} onSubmit={onSubmit}>
-  {({ isSubmitting }) => (
-    <Form style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-      <div>
-        <Field type="email" name="email" placeholder="Email" />
-        <ErrorMessage name="email" component="div" style={{ color: "red" }} />
-      </div>
-
-      <div>
-        <Field type="text" name="username" placeholder="Username" />
-        <ErrorMessage name="username" component="div" style={{ color: "red" }} />
-      </div>
-
-      <div>
-        <Field type="password" name="password" placeholder="Mot de passe" />
-        <ErrorMessage name="password" component="div" style={{ color: "red" }} />
-      </div>
-
-      <button type="submit" disabled={isSubmitting}>
-        S'inscrire
-      </button>
-    </Form>
-  )}
-</Formik> */}
