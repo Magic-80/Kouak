@@ -4,6 +4,7 @@ const http = require("http");
 const cors = require("cors");
 const { Server } = require("socket.io");
 const sequelize = require("./config/db");
+const jwt = require("jsonwebtoken");
 
 dotenv.config();
 
@@ -30,17 +31,35 @@ app.use("/api/messages", messageRoutes);
 
 let onlineUsers = {};
 
+
+io.use((socket, next) => {
+  const token = socket.handshake.auth.token;
+
+  if (!token) {
+    return next(new Error("Pas de token fourni"));
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    socket.user = decoded;
+    next();
+  } catch (err) {
+    return next(new Error("Token invalide ou expiré"));
+  }
+});
+
 io.on("connection", (socket) => {
-  console.log("🔌 Utilisateur connecté :", socket.id);
+  console.log("🔌 Utilisateur connecté :", socket.user);
+
   socket.on("user:join", (user) => {
-    onlineUsers[socket.id] = user;
+    onlineUsers[socket.id] = { ...user, id: socket.user.id };
     io.emit("users:update", Object.values(onlineUsers));
   });
 
   socket.on("disconnect", () => {
     delete onlineUsers[socket.id];
     io.emit("users:update", Object.values(onlineUsers));
-    console.log("❌ Utilisateur déconnecté :", socket.id);
+    console.log("❌ Utilisateur déconnecté :", socket.user);
   });
 });
 
