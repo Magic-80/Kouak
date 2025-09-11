@@ -51,101 +51,99 @@ export default function Register() {
 
         <h1> Inscription </h1>
 
-        <div>
-          <Formik
-            initialValues={{ email: "", username: "", password: "" }}
-            validationSchema={validationSchema}
-            onSubmit={onSubmit}
+        <Formik
+          initialValues={{ email: "", username: "", password: "" }}
+          validationSchema={validationSchema}
+          onSubmit={onSubmit}
 
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <div className="login_form">
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              <div className="login_form">
 
-                  <div className="login_username">
-                    <label htmlFor="email"> Entrée votre pseudo</label>
-                    <Field type="text" name="username" placeholder="Username" className='login_field_username'/>
-                    <ErrorMessage name="username" component="div" style={{ color: "red" }} />
-                  </div>
-
-
-                  <div className="login_email">
-                    <label htmlFor="email"> Entrée votre email</label>
-                    <Field
-                      type="email"
-                      name="email"
-                      placeholder="Adresse email"
-                      className="login_field_email"
-                    />
-                    <ErrorMessage
-                      name="email"
-                      component="div"
-                      style={{ color: "red" }}
-                    />
-                  </div>
-
-
-                  <div className="login_password">
-                    <label htmlFor="password"> Entrée votre mot de passe </label>
-                    <div className="login_password_field_content">
-                      <Field
-                        type={showPassword ? "text" : "password"}
-                        name="password"
-                        placeholder="Mot de passe"
-                        className="login_field_password"
-                      />
-
-                      <button onClick={handlePassword} className="eye_button">
-                        {eyeStatue ? (
-                          <img src={eye_close} alt="eil fermer" width={25} height={25} />
-                        ) : (
-                          <img src={eye_open} alt="eil ouvert" width={25} height={25} />
-                        )}
-                      </button>
-                    </div>
-
-                    <ErrorMessage
-                      name="password"
-                      component="div"
-                      style={{ color: "red" }}
-                    />
-                  </div>
-
-                  <div className="login_password">
-                    <label htmlFor="password_confirmation"> Confirmer votre mot de passe  </label>
-                    <div className="login_password_field_content">
-                      <Field
-                        type={showPassword ? "text" : "password"}
-                        name="password_confirmation"
-                        placeholder="Confirmation de Mot de passe"
-                        className="login_field_password"
-                      />
-
-                      <button onClick={handlePassword} className="eye_button">
-                        {eyeStatue ? (
-                          <img src={eye_close} alt="eil fermer" width={25} height={25} />
-                        ) : (
-                          <img src={eye_open} alt="eil ouvert" width={25} height={25} />
-                        )}
-                      </button>
-                    </div>
-
-                    <ErrorMessage
-                      name="password_confirmation"
-                      component="div"
-                      style={{ color: "red" }}
-                    />
-                  </div>
-
-
-                  <button type="submit" disabled={isSubmitting} className="login_button">
-                    Créer un compte
-                  </button>
+                <div className="login_username">
+                  <label htmlFor="email"> Entrée votre pseudo</label>
+                  <Field type="text" name="username" placeholder="Username" className='login_field_username' />
+                  <ErrorMessage name="username" component="div" style={{ color: "red" }} />
                 </div>
-              </Form>
-            )}
-          </Formik>
-        </div>
+
+
+                <div className="login_email">
+                  <label htmlFor="email"> Entrée votre email</label>
+                  <Field
+                    type="email"
+                    name="email"
+                    placeholder="Adresse email"
+                    className="login_field_email"
+                  />
+                  <ErrorMessage
+                    name="email"
+                    component="div"
+                    style={{ color: "red" }}
+                  />
+                </div>
+
+
+                <div className="login_password">
+                  <label htmlFor="password"> Entrée votre mot de passe </label>
+                  <div className="login_password_field_content">
+                    <Field
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Mot de passe"
+                      className="login_field_password"
+                    />
+
+                    <button onClick={handlePassword} className="eye_button">
+                      {eyeStatue ? (
+                        <img src={eye_close} alt="eil fermer" width={25} height={25} />
+                      ) : (
+                        <img src={eye_open} alt="eil ouvert" width={25} height={25} />
+                      )}
+                    </button>
+                  </div>
+
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    style={{ color: "red" }}
+                  />
+                </div>
+
+                <div className="login_password">
+                  <label htmlFor="password_confirmation"> Confirmer votre mot de passe  </label>
+                  <div className="login_password_field_content">
+                    <Field
+                      type={showPassword ? "text" : "password"}
+                      name="password_confirmation"
+                      placeholder="Confirmation de Mot de passe"
+                      className="login_field_password"
+                    />
+
+                    <button onClick={handlePassword} className="eye_button">
+                      {eyeStatue ? (
+                        <img src={eye_close} alt="eil fermer" width={25} height={25} />
+                      ) : (
+                        <img src={eye_open} alt="eil ouvert" width={25} height={25} />
+                      )}
+                    </button>
+                  </div>
+
+                  <ErrorMessage
+                    name="password_confirmation"
+                    component="div"
+                    style={{ color: "red" }}
+                  />
+                </div>
+
+
+                <button type="submit" disabled={isSubmitting} className="login_button">
+                  Créer un compte
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
       </div>
 
       <div className="login_left">
