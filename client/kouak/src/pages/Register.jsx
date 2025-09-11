@@ -21,8 +21,11 @@ export default function Register() {
 
   const onSubmit = async (values, { setSubmitting, setFieldError }) => {
     try {
-      await register(values.email, values.username, values.password);
-      navigate("/login");
+      if(values.confirmPassword == values.password) 
+      {
+        await register(values.email, values.username, values.password);
+        navigate("/login");
+      }
     } catch (error) {
       setFieldError("email", error.response?.data?.error || "Erreur");
     } finally {
@@ -33,7 +36,7 @@ export default function Register() {
   const validationSchema = Yup.object({
     email: Yup.string().email("Email invalide").required("Requis"),
     username: Yup.string().min(3, "Au moins 3 caractères").required("Requis"),
-    password: Yup.string().min(6, "Au moins 6 caractères").required("Requis"),
+    password: Yup.string().min(6, "Au moins 6 caractères").required("Requis"),    
   });
 
   return (
@@ -52,7 +55,7 @@ export default function Register() {
         <h1> Inscription </h1>
 
         <Formik
-          initialValues={{ email: "", username: "", password: "" }}
+          initialValues={{ email: "", username: "", password: "" , confirmPassword: ""}}
           validationSchema={validationSchema}
           onSubmit={onSubmit}
 
@@ -64,7 +67,7 @@ export default function Register() {
                 <div className="login_username">
                   <label htmlFor="email"> Entrée votre pseudo</label>
                   <Field type="text" name="username" placeholder="Username" className='login_field_username' />
-                  <ErrorMessage name="username" component="div" style={{ color: "red" }} />
+                  <ErrorMessage name="username" component='div' style={{ color: "red" , fontSize: 14 }} />
                 </div>
 
 
@@ -79,7 +82,7 @@ export default function Register() {
                   <ErrorMessage
                     name="email"
                     component="div"
-                    style={{ color: "red" }}
+                    style={{ color: "red" , fontSize: 14 }}
                   />
                 </div>
 
@@ -106,16 +109,16 @@ export default function Register() {
                   <ErrorMessage
                     name="password"
                     component="div"
-                    style={{ color: "red" }}
+                    style={{ color: "red" , fontSize: 14 }}
                   />
                 </div>
 
                 <div className="login_password">
-                  <label htmlFor="password_confirmation"> Confirmer votre mot de passe  </label>
+                  <label htmlFor="confirmPassword"> Confirmer votre mot de passe  </label>
                   <div className="login_password_field_content">
                     <Field
                       type={showPassword ? "text" : "password"}
-                      name="password_confirmation"
+                      name="confirmPassword"
                       placeholder="Confirmation de Mot de passe"
                       className="login_field_password"
                     />
@@ -132,7 +135,7 @@ export default function Register() {
                   <ErrorMessage
                     name="password_confirmation"
                     component="div"
-                    style={{ color: "red" }}
+                    style={{ color: "red" , fontSize: 14 }}
                   />
                 </div>
 
