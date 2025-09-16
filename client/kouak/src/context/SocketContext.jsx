@@ -1,33 +1,32 @@
 import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { io } from "socket.io-client";
+import { useAuth } from "./AuthContext";
 
 const SocketContext = createContext();
 
 export function SocketProvider({ children }) {
+  const { token, user } = useAuth();
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    if (!token || !user) return;
 
-    if (token) {
-      const newSocket = io(import.meta.env.VITE_SERVER_URL, {
-        auth: { token },
-        extraHeaders: { Authorization: `Bearer ${token}` },
-      });
+    const newSocket = io(import.meta.env.VITE_SERVER_URL, {
+      auth: { token },
+      extraHeaders: { Authorization: `Bearer ${token}` },
+    });
 
-      setSocket(newSocket);
+    newSocket.on("connect", () => {
+      newSocket.emit("user:join", user);
+    });
 
-      return () => {
-        newSocket.disconnect();
-        setSocket(null);
-      };
-    } else {
-      if (socket) {
-        socket.disconnect();
-        setSocket(null);
-      }
-    }
-  }, []);
+    setSocket(newSocket);
+
+    return () => {
+      newSocket.disconnect();
+      setSocket(null);
+    };
+  }, [token, user]);
 
   const value = useMemo(() => ({ socket }), [socket]);
 

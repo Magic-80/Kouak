@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import ForgotPassword from "./pages/forgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Chat from "./pages/Chat";
 import { useAuth } from "./context/AuthContext";
 import './App.css'
@@ -17,6 +19,8 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />
+        <Route path="/forgotPassword" element={<ForgotPassword />} />
+        <Route path="/resetPassword" element={<PrivateRoute><ResetPassword /></PrivateRoute>} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>

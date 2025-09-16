@@ -20,7 +20,6 @@ const AxiosInstance = () => {
         (error) => Promise.reject(error)
     );
 
-    // 🔹 Response interceptor
     api.interceptors.response.use(
         (response) => response,
         (error) => {

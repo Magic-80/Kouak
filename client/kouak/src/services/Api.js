@@ -21,3 +21,15 @@ export const sendMessage = async (content) => {
   const res = await api.post("/messages", { content });
   return res.data;
 };
+
+export const forgotPassword = async (email) => {
+  const res = await api.post("/auth/forgot-password", { email });
+  console.log(res);
+  
+  return res.data;
+};
+
+export const resetPassword = async (token , password) => {
+  const res = await api.post("/auth/reset-password", { token , password });
+  return res.data;
+};

@@ -46,27 +46,28 @@ router.post("/forgot-password", async (req, res) => {
     if (!user) return res.status(404).json({ error: 'Utilisateur introuvable' });
 
     const resetToken = crypto.randomBytes(32).toString("hex");
+    const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
     const expireToken = Date.now() + 1000 * 60 * 15;
 
     await user.update({
-      resetToken,
+      resetToken: hashedToken,
       resetTokenExpiry: expireToken,
     });
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: 'smtp.ethereal.email',
+      port: 587,
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
+        user: 'javier91@ethereal.email',
+        pass: 'rRtACTwZs6KqjDKm9V'
+      }
     });
 
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`
-
+    const resetUrl = `${process.env.WEB_SITE_APP_URL}/reset-password/${resetToken}`
 
     await transporter.sendMail({
-      from: `"Support Kouak" <${process.env.EMAIL_USER}>`,
-      to: email,
+      from: `"Support Kouak"  <no-reply@example.com>`,
+      to: "contactKouak@example.com",
       subject: "Réinitialisation de votre mot de passe",
       html: `<p>Vous avez demandé à réinitialiser votre mot de passe.</p>
              <p><a href="${resetUrl}">Cliquez ici pour le réinitialiser</a></p>
@@ -81,10 +82,10 @@ router.post("/forgot-password", async (req, res) => {
   }
 })
 
-router.post('reset-password', async (req, res) => {
+router.post('/reset-password', async (req, res) => {
   const { token, password } = req.body;
   try {
-    
+
     const user = await User.findOne({ where: { resetToken: token } });
     if (!user || user.resetTokenExpiry < Date.now()) {
       return res.status(400).json({ error: "Lien invalide ou expiré" });

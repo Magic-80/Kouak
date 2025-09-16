@@ -11,7 +11,6 @@ dotenv.config();
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/message");
 
-
 const app = express();
 app.use(cors({ origin: process.env.WEB_SITE_APP_URL, credentials: true }));
 app.use(express.json());
@@ -31,14 +30,11 @@ app.use("/api/messages", messageRoutes);
 
 let onlineUsers = {};
 
-
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
-
   if (!token) {
     return next(new Error("Pas de token fourni"));
   }
-
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     socket.user = decoded;
@@ -49,22 +45,43 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("🔌 Utilisateur connecté :", socket.user);
+  console.log("Utilisateur connecté :", socket.user);
 
-  socket.on("user:join", (user) => {
-    onlineUsers[socket.id] = { ...user, id: socket.user.id };
-    io.emit("users:update", Object.values(onlineUsers));
+  socket.on("user:join", () => {
+    const userId = socket.user.id;
+    const username = socket.user.username;
+
+    if (!onlineUsers[userId]) {
+      onlineUsers[userId] = { id: userId, name: username, sockets: [] };
+      io.emit("user:connected", { id: userId, name: username });
+    }
+
+    onlineUsers[userId].sockets.push(socket.id);
+
+    socket.emit(
+      "users:list",
+      Object.values(onlineUsers).map(u => ({ id: u.id, name: u.name }))
+    );
   });
 
   socket.on("disconnect", () => {
-    delete onlineUsers[socket.id];
-    io.emit("users:update", Object.values(onlineUsers));
-    console.log("❌ Utilisateur déconnecté :", socket.user);
+    const userId = socket.user.id;
+    if (onlineUsers[userId]) {
+      onlineUsers[userId].sockets = onlineUsers[userId].sockets.filter(
+        sid => sid !== socket.id
+      );
+      if (onlineUsers[userId].sockets.length === 0) {
+        const disconnectedUser = onlineUsers[userId];
+        delete onlineUsers[userId];
+        io.emit("user:disconnected", { id: disconnectedUser.id });
+      }
+    }
+    console.log("Utilisateur déconnecté :", socket.user);
   });
 });
 
 sequelize.sync().then(() => {
   server.listen(3001, () => {
-    console.log(`🚀 Serveur en ligne sur ${process.env.SERVER_URL}`);
+    console.log(`Serveur en ligne sur ${process.env.SERVER_URL}`);
   });
 });

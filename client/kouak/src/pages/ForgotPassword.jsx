@@ -1,49 +1,27 @@
 import { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { login } from "../services/Api";
-import { motion, AnimatePresence } from "framer-motion";
-import character from '../assets/images/character.png';
-import eye_open from '../assets/images/eye_open.svg';
-import eye_close from '../assets/images/eye_close.svg';
+import { AnimatePresence, motion } from "framer-motion";
+import character from "../assets/images/character.png";
+import { forgotPassword } from "../services/Api";
 
-export default function Login() {
-  const { signIn } = useAuth();
-  const navigate = useNavigate();
+export default function ForgotPassword() {
 
-  const [eyeStatue, setEyeStatue] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
   const [loadingButton, setLoadingButton] = useState(false);
   const [hideLogin, setHideLogin] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
 
-  const handlePassword = () => {
-    setEyeStatue(!eyeStatue);
-    setShowPassword(!showPassword);
-  };
-
-  const onSubmit = async (values, { setSubmitting, setStatus }) => {
+  const onSubmit = async (values, { setSubmitting }) => {
     setLoadingButton(true);
     try {
-      const data = await login(values.email, values.password);
-      signIn(data.token, data.user);
-
-      setShowLoadingScreen(true);
+      await forgotPassword(values.email);
 
       setTimeout(() => {
-        navigate("/chat");
+        navigate("/login");
       }, 2000);
 
-    } catch (err) {
-      console.error(err);
-      const apiMessage = err.response?.data?.error;
-      let message = "Adresse e-mail ou mot de passe incorrect";
-      if (apiMessage?.toLowerCase().includes("bloqué")) {
-        message = "Votre compte est bloqué, contactez le support.";
-      }
-      setStatus(message);
+    } catch (error) {
+      console.error(error);
     } finally {
       setSubmitting(false);
       setLoadingButton(false);
@@ -52,7 +30,6 @@ export default function Login() {
 
   const validationSchema = Yup.object({
     email: Yup.string().email("Email invalide").required("Requis"),
-    password: Yup.string().min(6, "Au moins 6 caractères").required("Requis"),
   });
 
   return (
@@ -112,12 +89,10 @@ export default function Login() {
         )}
       </AnimatePresence>
 
-
       <AnimatePresence>
         {!hideLogin && (
           <motion.div
-            className="login"
-          >
+            className="login">
             <div className="login_content">
               <div className="login_content_header">
                 <p className="login_content_title">
@@ -125,28 +100,23 @@ export default function Login() {
                 </p>
                 <div className="login_content_header_right">
                   <p> Pas de compte ? </p>
-                  <a href="/register"> Crée un compte </a>
+                  <a href="/login"> Se Connecter </a>
                 </div>
               </div>
 
-              <h1> Se connecter </h1>
+              <h1> Mot de passe oublier </h1>
 
               <Formik
-                initialValues={{ email: import.meta.env.VITE_EMAIL , password: import.meta.env.VITE_PASSWORD }}
+                initialValues={{ email: import.meta.env.VITE_EMAIL }}
                 validationSchema={validationSchema}
                 onSubmit={onSubmit}
               >
-                {({ isSubmitting, status }) => (
+                {({ isSubmitting }) => (
                   <Form>
                     <div className="login_form">
-                      {status && (
-                        <div style={{ color: "red", marginBottom: "10px" }}>
-                          {status}
-                        </div>
-                      )}
 
                       <div className="login_email">
-                        <label htmlFor="email"> Entrée votre email</label>
+                        <label htmlFor="email">Entrée votre email</label>
                         <Field
                           type="email"
                           name="email"
@@ -158,33 +128,6 @@ export default function Login() {
                           component="div"
                           style={{ color: "red" }}
                         />
-                      </div>
-
-                      <div className="login_password">
-                        <label htmlFor="password"> Entrée votre mot de passe </label>
-                        <div className="login_password_field_content">
-                          <Field
-                            type={showPassword ? "text" : "password"}
-                            name="password"
-                            placeholder="Mot de passe"
-                            className="login_field_password"
-                          />
-
-                          <button type="button" onClick={handlePassword} className="eye_button">
-                            {eyeStatue ? (
-                              <img src={eye_close} alt="eil fermer" width={25} height={25} />
-                            ) : (
-                              <img src={eye_open} alt="eil ouvert" width={25} height={25} />
-                            )}
-                          </button>
-                        </div>
-                        <ErrorMessage
-                          name="password"
-                          component="div"
-                          style={{ color: "red" }}
-                        />
-
-                        <a href="/forgotPassword" > Mot de passe oublier ? </a>
                       </div>
 
                       <motion.button
@@ -208,7 +151,7 @@ export default function Login() {
                             transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
                           />
                         ) : (
-                          "Se connecter"
+                          "Envoyer"
                         )}
                       </motion.button>
                     </div>
