@@ -5,19 +5,11 @@ import { useAuth } from "../context/AuthContext";
 import { useSocket } from "../context/SocketContext";
 import { getMessages, sendMessage } from "../services/Api";
 import logout from "../assets/images/logout.svg";
-import home from "../assets/images/home.svg";
-import message from "../assets/images/message.svg";
 
 function SidebarMenu({ onLogout }) {
   return (
     <aside className="menu_sidebar">
-      <div className="menu_sidebar_logo"><p>Q</p></div>
-      <nav className="menu_sidebar_nav">
-        <ul>
-          <li><img src={home} alt="Accueil" width={40} height={40} /></li>
-          <li><img src={message} alt="Messages" width={40} height={40} /></li>
-        </ul>
-      </nav>
+      <div className="menu_sidebar_logo"><p>K</p></div>
       <div className="menu_sidebar_bottom">
         <button type="button" onClick={onLogout}>
           <img src={logout} alt="Déconnexion" />

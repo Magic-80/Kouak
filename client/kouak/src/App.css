@@ -238,8 +238,7 @@
 }
 
 .menu_sidebar_bottom img {
-  width: 24px;
-  opacity: 0.7;
+  color: white;
   transition: opacity 0.2s ease;
 }
 
