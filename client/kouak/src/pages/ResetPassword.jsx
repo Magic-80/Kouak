@@ -23,7 +23,6 @@ export default function ResetPassword() {
     try {
       if (values.confirmPassword == values.password) {
         console.log("log du reset");
-
       }
 
     } catch (error) {

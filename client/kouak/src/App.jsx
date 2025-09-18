@@ -13,6 +13,7 @@ function PrivateRoute({ children }) {
 }
 
 export default function App() {
+    const { token } = useAuth();
   return (
     <BrowserRouter>
       <Routes>
@@ -20,7 +21,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/chat" element={<PrivateRoute><Chat /></PrivateRoute>} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
-        <Route path="/resetPassword" element={<PrivateRoute><ResetPassword /></PrivateRoute>} />
+        <Route path={`/resetPassword/${token}`} element={<PrivateRoute><ResetPassword /></PrivateRoute>}/>
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>

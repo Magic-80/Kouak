@@ -19,7 +19,7 @@ function authMiddleware(req, res, next) {
   }
 }
 
-// Récupérer tous les messages
+
 router.get("/", authMiddleware, async (req, res) => {
   const messages = await Message.findAll({
     include: [{ model: User, attributes: ["id", "username"] }],
@@ -28,7 +28,7 @@ router.get("/", authMiddleware, async (req, res) => {
   res.json(messages);
 });
 
-// 🔹 Envoyer un message
+
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const cleanContent = xss(req.body.content);

@@ -132,7 +132,13 @@ export default function Chat() {
     fetchMessages();
     socket.emit("user:join", user);
 
-    socket.on("message:new", (msg) => setMessages((prev) => [...prev, msg]));
+    socket.on("message:new", (msg) => {
+      setMessages((prev) => {
+        if (prev.some((m) => m.id === msg.id)) return prev; 
+        return [...prev, msg];
+      });
+    });
+
     socket.on("users:list", (list) => setUsers(list));
 
     return () => {
