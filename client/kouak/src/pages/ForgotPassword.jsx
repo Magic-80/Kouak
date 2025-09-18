@@ -4,9 +4,10 @@ import * as Yup from "yup";
 import { AnimatePresence, motion } from "framer-motion";
 import character from "../assets/images/character.png";
 import { forgotPassword } from "../services/Api";
+import { useNavigate } from "react-router-dom";
 
 export default function ForgotPassword() {
-
+  const navigate = useNavigate();
   const [loadingButton, setLoadingButton] = useState(false);
   const [hideLogin, setHideLogin] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
@@ -15,6 +16,8 @@ export default function ForgotPassword() {
     setLoadingButton(true);
     try {
       await forgotPassword(values.email);
+
+      setShowLoadingScreen(true);
 
       setTimeout(() => {
         navigate("/login");

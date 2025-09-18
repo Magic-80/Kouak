@@ -6,16 +6,17 @@ import character from "../assets/images/character.png";
 import eye_open from '../assets/images/eye_open.svg';
 import eye_close from '../assets/images/eye_close.svg';
 import { resetPassword } from "../services/Api";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function ResetPassword() {
+  const navigate = useNavigate();
   const [loadingButton, setLoadingButton] = useState(false);
   const [hideLogin, setHideLogin] = useState(false);
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [eyeStatue, setEyeStatue] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
 
-   const { token } = useParams();
+  const { token } = useParams();
 
   const handlePassword = () => {
     setEyeStatue(!eyeStatue);
@@ -26,8 +27,13 @@ export default function ResetPassword() {
     setLoadingButton(true);
     try {
       if (values.confirmPassword == values.password) {
-        await resetPassword(token , values.password);
-        navigate("/login");
+        await resetPassword(token, values.password);
+
+        setShowLoadingScreen(true);
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 2000);
       }
 
     } catch (error) {
