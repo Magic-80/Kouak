@@ -8,7 +8,7 @@ dotenv.config();
 const router = express.Router();
 
 function authMiddleware(req, res, next) {
-  const auth = req.headers.authorization;
+  const auth = req.headers.authorization;  
   if (!auth) return res.status(401).json({ error: "Token manquant" });
   try {
     const [, token] = auth.split(" ");
@@ -19,7 +19,6 @@ function authMiddleware(req, res, next) {
   }
 }
 
-
 router.get("/", authMiddleware, async (req, res) => {
   const messages = await Message.findAll({
     include: [{ model: User, attributes: ["id", "username"] }],
@@ -27,7 +26,6 @@ router.get("/", authMiddleware, async (req, res) => {
   });
   res.json(messages);
 });
-
 
 router.post("/", authMiddleware, async (req, res) => {
   try {
@@ -42,9 +40,17 @@ router.post("/", authMiddleware, async (req, res) => {
       userId: req.user.id,
     });
 
-    const fullMessage = await Message.findByPk(message.id, {
-      include: [{ model: User, attributes: ["id", "username"] }],
-    });
+    const fullMessage = {
+      id: message.id,
+      content: message.content,
+      createdAt: message.createdAt,
+      updatedAt: message.updatedAt,
+      userId: message.userId,
+      User: {
+        id: req.user.id,
+        username: req.user.username,
+      },
+    };
 
     req.io.emit("message:new", fullMessage);
     res.json(fullMessage);

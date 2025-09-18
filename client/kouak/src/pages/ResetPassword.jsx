@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import character from "../assets/images/character.png";
 import eye_open from '../assets/images/eye_open.svg';
 import eye_close from '../assets/images/eye_close.svg';
+import { resetPassword } from "../services/Api";
+import { useParams } from "react-router-dom";
 
 export default function ResetPassword() {
   const [loadingButton, setLoadingButton] = useState(false);
@@ -12,6 +14,8 @@ export default function ResetPassword() {
   const [showLoadingScreen, setShowLoadingScreen] = useState(false);
   const [eyeStatue, setEyeStatue] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+
+   const { token } = useParams();
 
   const handlePassword = () => {
     setEyeStatue(!eyeStatue);
@@ -22,7 +26,8 @@ export default function ResetPassword() {
     setLoadingButton(true);
     try {
       if (values.confirmPassword == values.password) {
-        console.log("log du reset");
+        await resetPassword(token , values.password);
+        navigate("/login");
       }
 
     } catch (error) {

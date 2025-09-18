@@ -11,32 +11,38 @@ const router = express.Router();
 
 router.post("/register", async (req, res) => {
   const { email, username, password } = req.body;
+
   try {
     const hash = await bcrypt.hash(password, 10);
     const user = await User.create({ email, username, password: hash });
     res.json({ id: user.id, email: user.email, username: user.username });
   } catch (err) {
-    if (err.name === "SequelizeUniqueConstraintError") {
-      return res.status(400).json({ error: "Email ou username déjà utilisé" });
-    }
+    console.error(err);
     res.status(500).json({ error: "Erreur serveur" });
   }
 });
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  const user = await User.findOne({ where: { email } });
-  if (!user) return res.status(401).json({ error: "Utilisateur introuvable" });
 
-  const valid = await bcrypt.compare(password, user.password);
-  if (!valid) return res.status(401).json({ error: "Mot de passe incorrect" });
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(401).json({ error: "Utilisateur introuvable" });
 
-  const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
-    expiresIn: "60m",
-  });
-  res.json({ token, user: { id: user.id, username: user.username } });
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) return res.status(401).json({ error: "Mot de passe incorrect" });
+
+    const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, {
+      expiresIn: "60m",
+    });
+    res.json({ token, user: { id: user.id, username: user.username } });
+
+  } catch (error) {
+    console.error(err);
+    res.status(500).json({ error: "Erreur serveur" });
+  }
+
 });
-
 
 router.post("/forgot-password", async (req, res) => {
   const { email } = req.body;
@@ -46,11 +52,10 @@ router.post("/forgot-password", async (req, res) => {
     if (!user) return res.status(404).json({ error: 'Utilisateur introuvable' });
 
     const resetToken = crypto.randomBytes(32).toString("hex");
-    const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
     const expireToken = Date.now() + 1000 * 60 * 15;
 
     await user.update({
-      resetToken: hashedToken,
+      resetToken: resetToken,
       resetTokenExpiry: expireToken,
     });
 
@@ -58,12 +63,12 @@ router.post("/forgot-password", async (req, res) => {
       host: 'smtp.ethereal.email',
       port: 587,
       auth: {
-        user: 'javier91@ethereal.email',
-        pass: 'rRtACTwZs6KqjDKm9V'
+        user: 'shaylee79@ethereal.email',
+        pass: 'nu1ej23ka5XjaRx12B'
       }
     });
 
-    const resetUrl = `${process.env.WEB_SITE_APP_URL}/reset-password/${resetToken}`
+    const resetUrl = `${process.env.WEB_SITE_APP_URL}/resetPassword/${resetToken}`
 
     await transporter.sendMail({
       from: `"Support Kouak"  <no-reply@example.com>`,

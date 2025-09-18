@@ -22,7 +22,7 @@ function SidebarMenu({ onLogout }) {
 function UserList({ users, currentUser }) {
   return (
     <aside className="chat-sidebar">
-      <h2 className="chat-sidebar-title">👥 Utilisateurs</h2>
+      <h2 className="chat-sidebar-title">👥 Utilisateurs connecter</h2>
       {users.length > 0 ? (
         <ul className="chat-user-list">
           {users.map((u) => (
@@ -117,28 +117,23 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
 
+  const fetchMessages = async () => {
+    try {
+      const data = await getMessages();
+      setMessages(data);
+    } catch (error) {
+      console.error("Erreur fetch messages:", error);
+    }
+  };
+
   useEffect(() => {
     if (!token || !socket) return;
 
-    const fetchMessages = async () => {
-      try {
-        const data = await getMessages();
-        setMessages(data);
-      } catch (error) {
-        console.error("Erreur fetch messages:", error);
-      }
-    };
-
     fetchMessages();
+    
     socket.emit("user:join", user);
 
-    socket.on("message:new", (msg) => {
-      setMessages((prev) => {
-        if (prev.some((m) => m.id === msg.id)) return prev; 
-        return [...prev, msg];
-      });
-    });
-
+    socket.on("message:new", (msg) => setMessages((prev) => [...prev, msg]));
     socket.on("users:list", (list) => setUsers(list));
 
     return () => {
