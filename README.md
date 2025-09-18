@@ -1,4 +1,4 @@
-# 💬 Chat App (React + Node + Socket.IO)
+# 💬 Kouak 
 
 Une application de chat en temps réel construite avec **React (Vite)** pour le frontend et **Node.js / Express / Sequelize / Socket.IO** pour le backend.
 
